@@ -1,4 +1,5 @@
 import "./App.css";
+import "lenis/dist/lenis.css";
 import ReactLenis, { LenisRef, useLenis } from "lenis/react";
 import { ParallaxText } from "./componenets/ParallaxText";
 import {
@@ -35,10 +36,12 @@ function App() {
         root
         options={{
           autoRaf: false,
-          duration: 3.5, // Similar to Locomotive's easing feel
-          //easing: (t) => 1 - Math.pow(1 - t, 3), // Inertia-like ease-out
           wheelMultiplier: 0.5, // Adjusts scroll speed sensitivity
           touchMultiplier: 0.5, // Makes touch scrolling more natural
+          lerp: 0.1,
+          duration: 1.4,
+          smoothWheel: true,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         }}
         ref={lenisRef}
       >
@@ -88,13 +91,14 @@ function App() {
           </motion.div>
           <motion.div style={{ y }} className="absolute bottom-[15%]">
             <ParallaxText baseVelocity={-3}>
-              <h1 className="text-white select-none text-[clamp(9rem,15vw,16rem)] font-medium inline">
+              <h1 className="text-white select-none text-[clamp(9rem,15vw,14rem)] font-medium inline">
                 Dennis Snellenberg—{" "}
               </h1>
             </ParallaxText>
           </motion.div>
         </motion.main>
         <Projects />
+        <div className="mb-[100vh]"></div>
       </ReactLenis>
     </>
   );

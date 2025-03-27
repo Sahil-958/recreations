@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useEffect, useState } from "react";
 
 const projects = [
   {
     title: "C2 Montreal",
-    src: "c2montreal.png",
+    src: "thumbnail-aanstekelijk.jpg",
     color: "#000000",
   },
   {
     title: "Office Studio",
-    src: "officestudio.png",
+    src: "thumbnail-fabric-darkgray.jpg",
     color: "#8C8C8C",
   },
   {
     title: "Locomotive",
-    src: "locomotive.png",
+    src: "thumbnail-thedamai-v2.jpg",
     color: "#EFE8D3",
   },
   {
     title: "Silencio",
-    src: "silencio.png",
+    src: "thumbnail-twice.jpg",
     color: "#706D63",
   },
 ];
@@ -40,7 +41,7 @@ export default function Projects() {
           );
         })}
       </div>
-      {/* <Modal modal={modal} projects={projects} /> */}
+      <Modal modal={modal} projects={projects} />
     </main>
   );
 }
@@ -71,5 +72,119 @@ function Project({ index, title, setModal }: ProjectProps) {
         Design & Development
       </p>
     </div>
+  );
+}
+
+interface ModalProps {
+  modal: { active: boolean; index: number };
+  projects: [{ title: string; src: string; color: string }];
+}
+
+function Modal({ modal, projects }: ModalProps) {
+  const { active, index } = modal;
+  const xModal = useMotionValue(0);
+  const yModal = useMotionValue(0);
+  const xModalSpring = useSpring(xModal, { stiffness: 100, damping: 15 });
+  const yModalSpring = useSpring(yModal, { stiffness: 100, damping: 15 });
+
+  // Motion values for the cursor
+  const xCursor = useMotionValue(0);
+  const yCursor = useMotionValue(0);
+  const xCursorSpring = useSpring(xCursor, { stiffness: 120, damping: 20 });
+  const yCursorSpring = useSpring(yCursor, { stiffness: 120, damping: 20 });
+
+  // Motion values for the cursor label
+  const xCursorLabel = useMotionValue(0);
+  const yCursorLabel = useMotionValue(0);
+  const xCursorLabelSpring = useSpring(xCursorLabel, {
+    stiffness: 150,
+    damping: 25,
+  });
+  const yCursorLabelSpring = useSpring(yCursorLabel, {
+    stiffness: 150,
+    damping: 25,
+  });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { pageX, pageY } = e;
+
+      // Update motion values
+      xModal.set(pageX);
+      yModal.set(pageY);
+
+      xCursor.set(pageX);
+      yCursor.set(pageY);
+
+      xCursorLabel.set(pageX);
+      yCursorLabel.set(pageY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [xModal, yModal, xCursor, yCursor, xCursorLabel, yCursorLabel]);
+
+  const scaleAnimation = {
+    initial: { scale: 0, x: "-50%", y: "-50%" },
+    enter: {
+      scale: 1,
+      x: "-50%",
+      y: "-50%",
+      transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] },
+    },
+    closed: {
+      scale: 0,
+      x: "-50%",
+      y: "-50%",
+      transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] },
+    },
+  };
+  return (
+    <>
+      <motion.div
+        variants={scaleAnimation}
+        style={{ left: xModalSpring, top: yModalSpring }}
+        initial="initial"
+        animate={active ? "enter" : "closed"}
+        className="h-96 w-96 absolute bg-white overflow-hidden pointer-events-none flex items-center justify-center"
+      >
+        <div
+          style={{ top: index * -100 + "%" }}
+          className="h-full w-full absolute transition-[top] duration-700"
+        >
+          {projects.map((project, index) => {
+            const { src, color } = project;
+            return (
+              <div
+                className="h-full w-full flex items-center justify-center"
+                style={{ background: color }}
+                key={`modal_${index}`}
+                data-idx={`${index}`}
+              >
+                <img className="h-auto w-72" src={`${src}`} alt="image" />
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+      <motion.div
+        style={{ left: xCursorSpring, top: yCursorSpring }}
+        className="w-[80px] h-[80px] rounded-full bg-[#455ce9] text-white z-2 absolute 
+        flex items-center justify-center text-2xl font-light pointer-events-none"
+        variants={scaleAnimation}
+        initial="initial"
+        animate={active ? "enter" : "closed"}
+      ></motion.div>
+      <motion.div
+        style={{ left: xCursorLabelSpring, top: yCursorLabelSpring }}
+        className="w-[80px] h-[80px] rounded-full bg-transparent text-white z-2 absolute 
+        flex items-center justify-center text-xl font-light pointer-events-none"
+        variants={scaleAnimation}
+        initial="initial"
+        animate={active ? "enter" : "closed"}
+      >
+        View
+      </motion.div>
+    </>
   );
 }
