@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 
 const projects = [
@@ -104,6 +104,34 @@ function Modal({ modal, projects }: ModalProps) {
     stiffness: 150,
     damping: 25,
   });
+  const { scrollX, scrollY } = useScroll();
+  useEffect(() => {
+    const unsubscribers = [
+      scrollY.on("change", (current) => {
+        const delta = current - (scrollY.getPrevious() ?? 0);
+        yModal.set(yModal.get() + delta);
+        yCursor.set(yCursor.get() + delta);
+        yCursorLabel.set(yCursorLabel.get() + delta);
+      }),
+      scrollX.on("change", (current) => {
+        const delta = current - (scrollX.getPrevious() ?? 0);
+        xModal.set(xModal.get() + delta);
+        xCursor.set(xCursor.get() + delta);
+        xCursorLabel.set(xCursorLabel.get() + delta);
+      }),
+    ];
+
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }, [
+    scrollX,
+    scrollY,
+    xCursor,
+    xCursorLabel,
+    xModal,
+    yCursor,
+    yCursorLabel,
+    yModal,
+  ]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
