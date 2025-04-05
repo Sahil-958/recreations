@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Projects from "./componenets/Projects";
 import LocomotiveScroll from "locomotive-scroll";
 import { useEffect } from "react";
+import Header from "./componenets/Header";
 
 function App() {
   useEffect(() => {
@@ -42,6 +43,7 @@ function App() {
         animate="enter"
         className="relative h-[115vh] flex overflow-hidden bg-[#999d9e]"
       >
+        <Header />
         <img
           draggable="false"
           className="object-cover h-full absolute left-1/2 -translate-x-1/2"
