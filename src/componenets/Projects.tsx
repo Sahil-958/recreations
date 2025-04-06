@@ -77,7 +77,7 @@ function Project({ index, title, setModal }: ProjectProps) {
 
 interface ModalProps {
   modal: { active: boolean; index: number };
-  projects: [{ title: string; src: string; color: string }];
+  projects: { title: string; src: string; color: string }[];
 }
 
 function Modal({ modal, projects }: ModalProps) {
