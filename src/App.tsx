@@ -6,6 +6,8 @@ import LocomotiveScroll from "locomotive-scroll";
 import { useEffect } from "react";
 import Header from "./componenets/Header";
 import Description from "./componenets/Description";
+import ImageSlider from "./componenets/ImageSlider";
+import Contact from "./componenets/Contact";
 
 function App() {
   useEffect(() => {
@@ -88,7 +90,8 @@ function App() {
       </motion.main>
       <Description />
       <Projects />
-      <div className="mb-[100vh]"></div>
+      <ImageSlider />
+      <Contact />
     </>
   );
 }
