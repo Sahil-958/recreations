@@ -5,6 +5,7 @@ import Projects from "./componenets/Projects";
 import LocomotiveScroll from "locomotive-scroll";
 import { useEffect } from "react";
 import Header from "./componenets/Header";
+import Description from "./componenets/Description";
 
 function App() {
   useEffect(() => {
@@ -15,7 +16,7 @@ function App() {
         lerp: 0.1,
         duration: 1.8,
         smoothWheel: true,
-        wheelMultiplier: 0.6,
+        wheelMultiplier: 0.4,
         touchMultiplier: 0.6,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       },
@@ -45,6 +46,8 @@ function App() {
       >
         <Header />
         <img
+          data-scroll
+          data-scroll-speed={-0.4}
           draggable="false"
           className="object-cover h-full absolute left-1/2 -translate-x-1/2"
           src="background.jpg"
@@ -83,6 +86,7 @@ function App() {
           </ParallaxText>
         </div>
       </motion.main>
+      <Description />
       <Projects />
       <div className="mb-[100vh]"></div>
     </>
