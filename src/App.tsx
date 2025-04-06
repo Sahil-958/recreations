@@ -47,7 +47,7 @@ function App() {
         <img
           draggable="false"
           className="object-cover h-full absolute left-1/2 -translate-x-1/2"
-          src="/background.jpg"
+          src="background.jpg"
           alt="background"
         />
         <div
